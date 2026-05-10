@@ -8,11 +8,16 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // Allow onboarding routes to pass through without token check (will be validated in-page)
+  if (pathname.startsWith('/onboarding')) {
+    return NextResponse.next()
+  }
+
   // Check for auth token in cookies
   const token = request.cookies.get('sb-access-token')?.value
 
   // If no token and trying to access protected routes, redirect to login
-  if (!token && !pathname.startsWith('/auth/')) {
+  if (!token && !pathname.startsWith('/auth/') && !pathname.startsWith('/onboarding')) {
     return NextResponse.redirect(new URL('/auth/login', request.url))
   }
 

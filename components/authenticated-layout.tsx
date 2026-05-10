@@ -1,5 +1,7 @@
 'use client'
 
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { AppSidebar } from '@/components/app-sidebar'
@@ -13,7 +15,21 @@ interface AuthenticatedLayoutProps {
 }
 
 export function AuthenticatedLayout({ children, title }: AuthenticatedLayoutProps) {
+  const router = useRouter()
   const { user, permissions, loading } = useAuth()
+
+  useEffect(() => {
+    if (loading || !user) return
+
+    // Check if onboarding is required
+    const onboardingRequired =
+      !user.user_metadata?.completed_onboarding &&
+      user.user_metadata?.onboarding_started !== false
+
+    if (onboardingRequired) {
+      router.push('/onboarding')
+    }
+  }, [user, loading, router])
 
   if (loading) {
     return (
