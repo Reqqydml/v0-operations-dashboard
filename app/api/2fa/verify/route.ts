@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/server'
 import { verifyTOTP } from '@/lib/2fa/totp'
 import { verifyBackupCode } from '@/lib/2fa/backup-codes'
 import { generateDeviceFingerprint } from '@/lib/2fa/device-fingerprint'
@@ -6,7 +6,7 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   try {
-    // Using supabase client
+    const supabase = await createClient()
     
     const {
       data: { user },

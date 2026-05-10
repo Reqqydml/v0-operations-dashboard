@@ -23,18 +23,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ChevronDown, LogOut, Settings, User } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { navigationConfig, filterNavigationByPermissions, roleColors } from '@/lib/navigation'
 import { PermissionContext } from '@/lib/permissions'
-
-// Temporary role colors until import issue is resolved
-const roleColors: Record<string, string> = {
-  super_admin: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-100',
-  admin: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-100',
-  project_manager: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100',
-  team_lead: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100',
-  staff: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100',
-  freelancer: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-100',
-  temp_specialist: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100',
-}
 import type { User as UserType } from '@/lib/supabase'
 
 interface AppSidebarProps {

@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/client'
 
 export type OnboardingStep = 1 | 2 | 3 | 4 | 5 | 6
 
@@ -9,6 +9,7 @@ export interface OnboardingProgress {
 
 // Check if user has completed onboarding
 export async function isOnboardingComplete(userId: string): Promise<boolean> {
+  const supabase = createClient()
   const { data: profile } = await supabase
     .from('profiles')
     .select('has_completed_password_change, has_completed_profile, has_completed_2fa, has_completed_legal')
@@ -25,6 +26,7 @@ export async function isOnboardingComplete(userId: string): Promise<boolean> {
 
 // Get current onboarding step
 export async function getCurrentOnboardingStep(userId: string): Promise<OnboardingStep> {
+  const supabase = createClient()
   const { data } = await supabase
     .from('onboarding_progress')
     .select('current_step')
@@ -40,6 +42,7 @@ export async function saveOnboardingProgress(
   step: OnboardingStep,
   stepData: Record<string, any>
 ) {
+  const supabase = createClient()
   const { data } = await supabase
     .from('onboarding_progress')
     .upsert({
@@ -54,6 +57,7 @@ export async function saveOnboardingProgress(
 
 // Mark onboarding step as complete
 export async function markStepComplete(userId: string, step: OnboardingStep) {
+  const supabase = createClient()
   const completionMap: Record<OnboardingStep, string> = {
     1: 'has_completed_password_change',
     2: 'has_completed_profile',
@@ -73,6 +77,7 @@ export async function markStepComplete(userId: string, step: OnboardingStep) {
 
 // Get legal documents for user's role
 export async function getLegalDocuments(userId: string) {
+  const supabase = createClient()
 
   // Get user's roles first
   const { data: userRoles } = await supabase
@@ -94,6 +99,7 @@ export async function getLegalDocuments(userId: string) {
 
 // Record document acceptance
 export async function acceptDocument(userId: string, documentId: string, documentVersion: number) {
+  const supabase = createClient()
 
   const { data } = await supabase
     .from('user_document_acceptances')
@@ -109,6 +115,7 @@ export async function acceptDocument(userId: string, documentId: string, documen
 
 // Check if user has accepted all required documents
 export async function hasAcceptedAllDocuments(userId: string): Promise<boolean> {
+  const supabase = createClient()
 
   const documents = await getLegalDocuments(userId)
   if (documents.length === 0) return true

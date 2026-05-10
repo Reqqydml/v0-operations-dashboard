@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { OnboardingWizard } from '@/components/onboarding-wizard'
 import { PasswordStrengthMeter } from '@/components/password-strength-meter'
-import { validatePasswordRequirements, isPasswordValid, calculatePasswordStrength } from '@/lib/password-validation'
+import { validatePassword } from '@/lib/password-validation'
 import { supabase } from '@/lib/supabase'
 import { Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react'
 
@@ -21,11 +21,11 @@ export default function OnboardingStep1() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const passwordStrength = calculatePasswordStrength(newPassword)
-  const isFormValid = isPasswordValid(newPassword) && confirmPassword === newPassword
+  const passwordValidation = validatePassword(newPassword)
+  const isPasswordValid = passwordValidation.score >= 2 && confirmPassword === newPassword
 
   const handleContinue = async () => {
-    if (!isFormValid) return
+    if (!isPasswordValid) return
 
     setLoading(true)
     setError(null)
@@ -144,7 +144,7 @@ export default function OnboardingStep1() {
           </Button>
           <Button
             onClick={handleContinue}
-            disabled={!isFormValid || loading}
+            disabled={!isPasswordValid || loading}
             className="flex-1"
           >
             {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}

@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react'
 import { PermissionContext } from '@/lib/permissions'
-import { hasPermission, hasAnyPermission, hasAllPermissions } from '@/lib/permissions'
+import { hasPermission, hasAnyPermission, hasAllPermission } from '@/lib/permissions'
 
 interface PermissionGuardProps {
   context: PermissionContext
