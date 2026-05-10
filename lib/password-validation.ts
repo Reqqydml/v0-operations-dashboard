@@ -63,3 +63,5 @@ export function calculatePasswordStrength(password: string): PasswordStrength {
 
   return { score, label, color }
 }
+
+export const validatePassword = validatePasswordRequirements
