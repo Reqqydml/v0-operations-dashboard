@@ -1,11 +1,11 @@
-import { createClient } from '@/lib/supabase/server'
+import { supabase } from '@/lib/supabase'
 import { verifyTOTP } from '@/lib/2fa/totp'
 import { generateBackupCodes, backupCodesToStorage } from '@/lib/2fa/backup-codes'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   try {
-    const supabase = await createClient()
+    // Using supabase client
     
     const {
       data: { user },

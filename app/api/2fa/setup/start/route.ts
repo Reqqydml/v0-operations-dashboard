@@ -1,10 +1,10 @@
-import { createClient } from '@/lib/supabase/server'
+import { supabase } from '@/lib/supabase'
 import { generateTOTPSecret, generateTOTPURI } from '@/lib/2fa/totp'
 import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   try {
-    const supabase = await createClient()
+    // Using supabase client
     
     // Get current user
     const {
