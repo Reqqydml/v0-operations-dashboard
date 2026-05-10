@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
@@ -243,16 +244,12 @@ export default function LoginPage() {
                     Remember me
                   </label>
                 </div>
-                <a
-                  href="#"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors disabled:opacity-50"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    // TODO: Implement password reset flow
-                  }}
+                <Link
+                  href="/auth/login/forgot-password"
+                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
 
               {/* Sign In Button */}
