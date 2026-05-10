@@ -3,9 +3,11 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase, type User } from '@/lib/supabase'
+import { getUserPermissions, type PermissionContext } from '@/lib/permissions'
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null)
+  const [permissions, setPermissions] = useState<PermissionContext | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
@@ -36,6 +38,10 @@ export function useAuth() {
         }
 
         setUser(data as User)
+
+        // Fetch permissions for this user
+        const perms = await getUserPermissions(session.user.id)
+        setPermissions(perms)
       } catch (error) {
         console.error('[v0] Auth check error:', error)
         router.push('/auth/login')
@@ -61,6 +67,9 @@ export function useAuth() {
 
         if (data) {
           setUser(data as User)
+          // Refresh permissions on token refresh
+          const perms = await getUserPermissions(session.user.id)
+          setPermissions(perms)
         }
       }
     })
@@ -70,5 +79,5 @@ export function useAuth() {
     }
   }, [router])
 
-  return { user, loading }
+  return { user, permissions, loading }
 }

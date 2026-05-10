@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -11,12 +11,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarRail,
 } from '@/components/ui/sidebar'
-import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,17 +23,24 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ChevronDown, LogOut, Settings, User } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import { getNavigationForRole, type Role } from '@/lib/navigation'
+import { navigationConfig, filterNavigationByPermissions, roleColors } from '@/lib/navigation'
+import { PermissionContext } from '@/lib/permissions'
 import type { User as UserType } from '@/lib/supabase'
 
 interface AppSidebarProps {
   user: UserType | null
+  permissions?: PermissionContext
 }
 
-export function AppSidebar({ user }: AppSidebarProps) {
+export function AppSidebar({ user, permissions }: AppSidebarProps) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
-  const navigation = user ? getNavigationForRole(user.role as Role) : []
+
+  // Filter navigation based on permissions
+  const userRoles = permissions?.roles.map((r) => r.slug) || []
+  const userPermissions = permissions?.permissions.map((p) => p.slug) || []
+  const allNavItems = navigationConfig.mainNav.flatMap((group) => group.items)
+  const navigation = filterNavigationByPermissions(allNavItems, userRoles, userPermissions)
 
   const handleSignOut = async () => {
     setIsLoading(true)
@@ -101,23 +104,27 @@ export function AppSidebar({ user }: AppSidebarProps) {
                     </Avatar>
                     <div className="flex flex-col items-start text-left">
                       <span className="text-xs font-medium">{user.full_name || user.email}</span>
-                      <span className="text-xs text-muted-foreground capitalize">{user.role}</span>
+                      {permissions?.roles && permissions.roles.length > 0 && (
+                        <span className={`text-xs px-2 py-0.5 rounded ${roleColors[permissions.roles[0].slug] || 'bg-gray-100'}`}>
+                          {permissions.roles[0].name}
+                        </span>
+                      )}
                     </div>
                     <ChevronDown className="ml-auto w-4 h-4" />
                   </SidebarMenuButton>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent side="top" className="w-56">
                   <DropdownMenuItem asChild>
-                    <Link href="/profile">
+                    <Link href="/settings/security/2fa">
                       <User className="w-4 h-4" />
-                      <span>Profile</span>
+                      <span>Profile & Security</span>
                     </Link>
                   </DropdownMenuItem>
-                  {user.role === 'Super Admin' && (
+                  {permissions?.isAdmin && (
                     <DropdownMenuItem asChild>
                       <Link href="/settings">
                         <Settings className="w-4 h-4" />
-                        <span>Settings</span>
+                        <span>System Settings</span>
                       </Link>
                     </DropdownMenuItem>
                   )}

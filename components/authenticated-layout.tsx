@@ -12,7 +12,7 @@ interface AuthenticatedLayoutProps {
 }
 
 export function AuthenticatedLayout({ children, title }: AuthenticatedLayoutProps) {
-  const { user, loading } = useAuth()
+  const { user, permissions, loading } = useAuth()
 
   if (loading) {
     return (
@@ -27,7 +27,7 @@ export function AuthenticatedLayout({ children, title }: AuthenticatedLayoutProp
 
   return (
     <SidebarProvider>
-      <AppSidebar user={user} />
+      <AppSidebar user={user} permissions={permissions || undefined} />
       <div className="flex flex-col w-full">
         <AppTopBar title={title} />
         <main className="flex-1 overflow-auto p-4 sm:p-6">
