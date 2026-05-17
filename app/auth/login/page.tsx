@@ -26,7 +26,7 @@ export default function LoginPage() {
   const [isLocked, setIsLocked] = useState(false)
   const [lockoutCountdown, setLockoutCountdown] = useState(0)
 
-  // Check for lockout status on mount and set up countdown interval
+  // Check for lockout status on mount and set up countdown intervals
   useEffect(() => {
     const checkLockout = () => {
       const stored = localStorage.getItem(FAILED_ATTEMPTS_KEY)
