@@ -89,7 +89,7 @@ export async function getUserPermissions(userId: string): Promise<PermissionCont
       .from('temp_specialist_metadata')
       .select('end_date, is_suspended')
       .eq('user_id', userId)
-      .single()
+      .maybeSingle()
 
     const isTempSpecialist = roles.some((r: Role) => r.slug === 'temp_specialist')
     const tempSpecialistExpired =
