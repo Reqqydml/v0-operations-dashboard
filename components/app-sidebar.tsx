@@ -82,7 +82,7 @@ export function AppSidebar({ user, permissions }: AppSidebarProps) {
             <SidebarMenuItem key={item.href}>
               <SidebarMenuButton asChild>
                 <Link href={item.href} className="flex items-center gap-2">
-                  {item.icon}
+                  {item.icon && <item.icon className="w-4 h-4" />}
                   <span>{item.label}</span>
                 </Link>
               </SidebarMenuButton>
